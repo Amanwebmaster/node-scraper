@@ -3,14 +3,20 @@ const puppeteer = require('puppeteer-core');
 const chromium = require('@sparticuz/chromium');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 async function fetchM3U8(movieUrl) {
     try {
+        // Automatically detect Chromium path
+        const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || await chromium.executablePath();
+        if (!executablePath) {
+            throw new Error('Chromium executable path not found.');
+        }
+
         const browser = await puppeteer.launch({
             args: chromium.args,
-            executablePath: await chromium.executablePath(),
-            headless: chromium.headless,
+            executablePath: executablePath,
+            headless: chromium.headless
         });
 
         const page = await browser.newPage();
