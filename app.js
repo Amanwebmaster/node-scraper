@@ -1,5 +1,6 @@
 const express = require('express');
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
+const chromium = require('@sparticuz/chromium');
 
 const app = express();
 const PORT = 3000;
@@ -7,9 +8,9 @@ const PORT = 3000;
 async function fetchM3U8(movieUrl) {
     try {
         const browser = await puppeteer.launch({
-            headless: 'new', // Use headless mode
-            executablePath: puppeteer.executablePath(), // Use manually installed Chrome
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
+            args: chromium.args,
+            executablePath: await chromium.executablePath(),
+            headless: chromium.headless,
         });
 
         const page = await browser.newPage();
