@@ -4,7 +4,8 @@
   "description": "A simple Express app to fetch M3U8 links using Puppeteer",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "vercel-build": "npm install"
   },
   "dependencies": {
     "express": "^4.18.2",
