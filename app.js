@@ -1,15 +1,21 @@
 const express = require('express');
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
+const chromium = require('chrome-aws-lambda');
 
 const app = express();
 const PORT = 3000;
 
 async function fetchM3U8(movieUrl) {
     try {
-        const browser = await puppeteer.launch({ headless: true });
-        const page = await browser.newPage();
+        const browser = await puppeteer.launch({
+            args: chromium.args,
+            executablePath: await chromium.executablePath,
+            headless: chromium.headless,
+        });
 
+        const page = await browser.newPage();
         await page.setRequestInterception(true);
+
         page.on('request', (request) => {
             if (request.resourceType() === 'media' || request.url().includes('.m3u8') || request.url().includes('.mp4')) {
                 console.log('Playable URL Found:', request.url());
